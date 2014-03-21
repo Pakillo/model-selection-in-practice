@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Model selection in practice</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Model selection in practice">
+  <meta name="author" content="F. Rodriguez-Sanchez (tinyurl.com/frod-san)">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Model selection in practice</h1>
+    <h2>(or 'Which variables should I keep in my model?')</h2>
+    <p>F. Rodriguez-Sanchez (tinyurl.com/frod-san)<br/>21/03/2014</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+strong {
+  font-weight: bold;
+}
+</style>
+
+<h2>Why model selection?</h2>
+
+<p><br></p>
+
+<ul class = "build incremental">
+<li><p><em>Nested models</em>: how much complexity is necessary to fit the data?</p></li>
+<li><p><em>Non-nested models</em>: compare fit of different models (e.g. alternative hypotheses)</p>
+
+<ul>
+<li>Note that building a larger model may be better than choosing any one of them!</li>
+</ul></li>
+<li><p>Important facts:</p>
+
+<ul>
+<li>Larger models usually fit data better</li>
+<li>Models usually perform much worse with independent data than with observed (calibration) data</li>
+<li>Need to account for model complexity (overfitting)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Overfitting and balanced model complexity</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div style='float:left;width:48%;' class='centered'>
+  <p><img src="assets/fig/linreg.png" title="plot of chunk linreg" alt="plot of chunk linreg" style="display: block; margin: auto;" /></p>
+
+<p><img src="assets/fig/overfitted.png" title="Overfitted model" alt="Overfitted model" style="display: block; margin: auto;" /></p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <p><img src="assets/fig/wrongmodel.png" title="Wrong model" alt="Wrong model" style="display: block; margin: auto;" /></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Overfitting: an example with niche modelling</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><br></p>
+
+<p>Wenger &amp; Olden (2012) <a href="http://dx.doi.org/10.1111/j.2041-210X.2011.00170.x">Assessing transferability of ecological models: an underappreciated aspect of statistical validation</a>. <em>Methods Ecol Evol</em>. </p>
+
+<p><br></p>
+
+<div style='float:left;width:48%;' class='centered'>
+  <p>GLMM </p>
+
+<p><img src="assets/img/olden1.PNG" alt=""></p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <p>Random forests (overfit) </p>
+
+<p><img src="assets/img/olden2.PNG" alt=""></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>So, two important aspects of model selection</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><br></p>
+
+<ul class = "build incremental">
+<li><p>On one hand, we want to maximise fit.</p></li>
+<li><p>On the other hand, we want to avoid overfitting and overly complex models.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Evaluating models&#39; predictive accuracy</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Cross-validation (k fold, leave one out...)</li>
+</ul>
+
+<ul class = "build incremental">
+<li><p>Alternatives:</p>
+
+<ul>
+<li>AIC</li>
+<li>BIC</li>
+<li>DIC</li>
+<li>WAIC</li>
+</ul></li>
+<li><p>All these attempt an impossible task: </p>
+
+<ul>
+<li>estimating out-of-sample prediction error without external data or further model fits!</li>
+</ul></li>
+<li><p>All these methods have flaws!</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Cross-validation</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><br></p>
+
+<p>Preferred method, but</p>
+
+<ul class = "build incremental">
+<li>Requires splitting data (difficult for structured data: space, time)</li>
+<li>Data may not be independent (e.g. due to spatial or temporal autocorrelation)</li>
+<li>Computationally expensive (requires fitting many models)</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>AIC</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="assets/img/AIC.PNG" alt=""></p>
+
+<ul class = "build incremental">
+<li><p>First term: model fit (deviance, log likelihood)</p></li>
+<li><p>k: number of estimated parameters (penalisation for model complexity)</p></li>
+<li><p>AIC biased towards complex models.</p></li>
+<li><p>AICc recommended with &#39;small&#39; sample sizes (n/p &lt; 40). But see <a href="http://www.esajournals.org/doi/pdf/10.1890/05-0074">Richards 2005 Ecology</a>.</p></li>
+<li><p>Doesn&#39;t work with hierarchical models or informative priors!</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>DIC</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><br></p>
+
+<p><img src="assets/img/DIC.PNG" alt=""></p>
+
+<ul class = "build incremental">
+<li>First term: posterior deviance (Bayesian)</li>
+<li><img src="assets/img/pDIC.png" alt=""> effective number of parameters 
+
+<ul>
+<li>(influenced by priors and the amount of pooling in hierarchical models)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>What about BIC?</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><br></p>
+
+<p><img src="assets/img/BIC.PNG" alt=""></p>
+
+<ul class = "build incremental">
+<li><p>Larger penalty with large datasets (favouring simpler models)</p></li>
+<li><p>Not intended for assessing out-of-sample model performance</p></li>
+<li><p>Problematic (e.g. Burnham et al. 2011, or Gelman et al. 2013 do not recommend it).</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Problems of IC</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>No information criteria is panacea: all have problems (see refs at the end).</p></li>
+<li><p>They give average out-of-sample prediction error, but prediction errors can differ substantially within the same dataset (e.g. populations, species).</p></li>
+<li><p>Sometimes better models rank poorly (Gelman et al. 2013). So, combine with thorough model checks.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>So which variables should enter my model?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>Choose variables based on <strong>ecological understanding</strong>, rather than throwing plenty of them in a fishing expedition.</p></li>
+<li><p>Propose single global model or small set (&lt; 10 - 20) of <strong>reasonable</strong> candidate models.</p></li>
+<li><p>Number of variables balanced with sample size (at least 10 - 30 obs per param)</p></li>
+<li><p>Assess collinearity between predictors (Dormann et al 2013)</p>
+
+<ul>
+<li>pairs() or similar</li>
+<li>If |r| &gt; 0.5 - 0.7, consider leaving one variable out, but keep it in mind when interpreting model results.</li>
+<li>Or combine 2 or more in a synthetic variable (e.g. water deficit ~ Temp + Precip).</li>
+<li>Many methods available, e.g. sequential, ridge regression... (see Dormann et al)</li>
+<li>Measurement error can seriously complicate things (Biggs et al 2009; Freckleton 2011)</li>
+</ul></li>
+<li><p>For predictors with large effects, consider interactions.</p></li>
+<li><p>See also Zuur et al 2009.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>Think about the shape of relationships</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>y ~ x + z</p>
+
+<p>Really? Not everything has to be linear! Actually, it often is not.</p>
+
+<p><strong>Think</strong> about shape of relationship. See chapter 3 in Bolker&#39;s book.</p>
+
+<div style='float:left;width:48%;' class='centered'>
+  <p><img src="assets/fig/unnamed-chunk-1.png" title="plot of chunk unnamed-chunk-1" alt="plot of chunk unnamed-chunk-1" style="display: block; margin: auto;" /></p>
+
+</div>
+<div style='float:right;width:48%;'>
+  <p><img src="assets/fig/unnamed-chunk-2.png" title="plot of chunk unnamed-chunk-2" alt="plot of chunk unnamed-chunk-2" style="display: block; margin: auto;" /></p>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Sample size is important</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><a href="http://vimeo.com/57127001">http://vimeo.com/57127001</a></p>
+
+<blockquote>
+<p>Especially if you want to include interactions!</p>
+</blockquote>
+
+<p><img src="assets/img/ssize-pvalue.png" alt=""></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Removing predictors</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Do not use stepwise regression</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>Whittingham et al. (2006) Why do we still use stepwise modelling in ecology and behaviour? J. Animal Ecology.</p></li>
+<li><p>Mundry &amp; Nunn (2009) Stepwise Model Fitting and Statistical Inference: Turning Noise into Signal Pollution. Am Nat.</p></li>
+<li><p>This includes stepAIC (e.g. Dahlgren 2010; Burnham et al 2011; Hegyi &amp; Garamszegi 2011).</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Gelman&#39;s criteria for removing predictors</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>(assuming only potentially relevant predictors have been selected a priori)</p>
+
+<ul class = "build incremental">
+<li><p>NOT significant + expected sign = let it be.</p></li>
+<li><p>NOT significant + NOT expected sign = remove it.</p></li>
+<li><p>Significant + NOT expected sign = check… confounding variables?</p></li>
+<li><p>Significant + expected sign = keep it!</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>How to make your results significant</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol class = "build incremental">
+<li><p>Test multiple variables, then report the ones that are significant.</p></li>
+<li><p>Artificially choose when to end your experiment.</p></li>
+<li><p>Add covariates until effects are significant.</p></li>
+<li><p>Test different conditions (e.g. different levels of a factor) and report the ones you like.</p></li>
+<li><p>Read <a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1850704">Simmons et al 2011</a></p></li>
+<li><p>Let&#39;s substitute &#39;statistical significance&#39; by something <a href="http://www.significancemagazine.org/details/webexclusive/5397521/The-statistics-dictionary-Significantly-misleading.html">more informative and less misleading</a></p></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>Statistical Errors: type I-II versus M-S</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>Type I: incorrect rejection of null hypothesis.</p></li>
+<li><p>Type II: failure to reject false null hypothesis.</p></li>
+<li><p>In ecology, everything is different. Finding a significant difference will mostly depend on your sample size (and researchers&#39; degrees of freedom; Simmons et al 2011).</p></li>
+<li><p>Type S (Sign): estimating effect in opposite direction.</p></li>
+<li><p>Type M (Magnitude): Misestimating magnitude of the effect (under or overestimating).</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  <hgroup>
+    <h2>Summary</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol class = "build incremental">
+<li><p>Choose meaningful variables</p>
+
+<ul>
+<li>Beware collinearity</li>
+<li>Keep good n/p ratio</li>
+</ul></li>
+<li><p>Generate global model or (small) set of candidate models</p>
+
+<ul>
+<li>Avoid all-subsets</li>
+<li>Don&#39;t assume linear effects: think about appropriate functional relationships</li>
+<li>Consider interactions for strong main effects</li>
+</ul></li>
+<li><p>If &gt; 1 model have similar support, consider model averaging.</p></li>
+<li><p>Always check thoroughly fitted models</p>
+
+<ul>
+<li>Residuals, goodness of fit...</li>
+<li>Plot. Check models. Plot. Check assumptions. Plot. (Lavine 2014).</li>
+</ul></li>
+<li><p>Move away of statistical significance -&gt; effect sizes, type M and S errors...</p></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  <hgroup>
+    <h2>To read more</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Olden &amp; Jackson (2000) Torturing data for the sake of generality: How valid are our regression models? Ecoscience.</p></li>
+<li><p>Burnham &amp; Anderson book (2002). Anderson 2008 book.</p></li>
+<li><p>Johnson &amp; Omland (2004) Model selection in ecology and evolution. TREE</p></li>
+<li><p>Anderson &amp; Burnham (2002) Avoiding pitfalls when using information-theoretic methods. J. Wildlife Management.</p></li>
+<li><p>Richards (2005) Testing ecological theory using the information-theoretic approach: Examples and cautionary results. Ecology.</p></li>
+<li><p>Link &amp; Barker (2006) MODEL WEIGHTS AND THE FOUNDATIONS OF MULTIMODEL INFERENCE. Ecology.</p></li>
+<li><p>Murray &amp; Conner (2009) Methods to quantify variable importance: implications for the analysis of noisy ecological data. Ecology.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>To read more</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Murtaugh (2009) Performance of several variable-selection methods applied to real ecological data. Ecology Letters.</p></li>
+<li><p>Dahlgren (2010) Alternative regression methods are not considered in Murtaugh (2009) or by ecologists in general. Ecology Letters.</p></li>
+<li><p>Model selection, multimodel inference and information-theoretic approaches in behavioural ecology. <a href="http://link.springer.com/journal/265/65/1/page/1">Special Issue of Behav Ecol &amp; Sociobiol</a>.</p></li>
+<li><p>Grueber et al (2011) Multimodel inference in ecology and evolution: challenges and solutions. J. Evol Biol.</p></li>
+<li><p>Gelman et al (2013) Understanding predictive information criteria for Bayesian models. </p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>END</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><br></p>
+
+<p>Hope it was useful!</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Overfitting and balanced model complexity'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Overfitting: an example with niche modelling'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='So, two important aspects of model selection'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Evaluating models&#39; predictive accuracy'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Cross-validation'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='AIC'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='DIC'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='What about BIC?'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Problems of IC'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='So which variables should enter my model?'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Think about the shape of relationships'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Sample size is important'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Removing predictors'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Do not use stepwise regression'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Gelman&#39;s criteria for removing predictors'>
+         16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='How to make your results significant'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Statistical Errors: type I-II versus M-S'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Summary'>
+         19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='To read more'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='To read more'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='END'>
+         22
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
