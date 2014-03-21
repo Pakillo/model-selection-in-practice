@@ -46,7 +46,7 @@ strong {
 
 
 ```{r options, echo=FALSE}
-opts_chunk$set(comment=NA, fig.width=4, fig.height=4, fig.align='center', size='small')
+opts_chunk$set(comment=NA, fig.width=4, fig.height=4, fig.align='center', size='small', cache=FALSE)
 ```
 
 
@@ -346,6 +346,18 @@ http://vimeo.com/57127001
 
 ---
 
+## Plot everything
+
+These 4 datasets give identical linear regressions. But differences are obvious. So models' summary statistics are not enough: [plot everything!](http://blog.plot.ly/post/68951620673/why-graph-anscombes-quartet)
+
+```{r anscombe, include=FALSE}
+example(anscombe)
+```
+
+![](assets/fig/anscombe.png)
+
+---
+
 ## Summary
 
 > 1. Choose meaningful variables
@@ -353,7 +365,7 @@ http://vimeo.com/57127001
   + Keep good n/p ratio
 
 > 2. Generate global model or (small) set of candidate models
-  + Avoid all-subsets
+  + Avoid stepwise and all-subsets
   + Don't assume linear effects: think about appropriate functional relationships
   + Consider interactions for strong main effects
   
