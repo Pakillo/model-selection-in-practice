@@ -208,7 +208,7 @@ Preferred method, but
 
 > * Not intended for assessing out-of-sample model performance
 
-> * Problematic (e.g. Burnham et al. 2011, or Gelman et al. 2013 do not recommend it).
+> * Problematic (e.g. Burnham et al. 2011, or Gelman et al. 2013 do not recommend it; but see Link & Barker 2006).
 
 
 ---
@@ -240,7 +240,7 @@ Preferred method, but
     
 > * For predictors with large effects, consider interactions.
     
-> * See also Zuur et al 2009.
+> * See also Zuur et al 2010.
 
 
 
@@ -342,6 +342,8 @@ http://vimeo.com/57127001
 > * Type S (Sign): estimating effect in opposite direction.
 
 > * Type M (Magnitude): Misestimating magnitude of the effect (under or overestimating).
+
+> * Avoid also Type III error (Dangles & Casas 2012): finding right answer to the wrong question!
 
 
 ---
